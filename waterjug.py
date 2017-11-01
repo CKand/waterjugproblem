@@ -7,7 +7,7 @@ def twoJugProblemBFS(jugOne, jugTwo, goal):
     #therefore just return that it is a failure, as it cannot be computed         
     if goal > jugOne + jugTwo:
         print("Fails, an invald problem provided.")
-        return False;
+        return;
         
     # set the initial state in the queue with two empty jugs;
     queue = [(0, 0)];
@@ -21,7 +21,7 @@ def twoJugProblemBFS(jugOne, jugTwo, goal):
         #the goal is when only 2 litres is filled between the two jugs, once this is found, exit
         if jugOneState + jugTwoState == goal:
             print("You have reached the goal!")    
-            return True;
+            return;
         #set of possible states from current state     
         states = set()
 
@@ -55,7 +55,7 @@ def twoJugProblemBFS(jugOne, jugTwo, goal):
             #print queue to see progress
             print(queue)
      
-    return False;
+    return;
 
 #run main, select the appropriate method to run either BFS solution or heuristic solution 
 if __name__ == "__main__":
