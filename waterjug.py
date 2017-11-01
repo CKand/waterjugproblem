@@ -1,3 +1,5 @@
+import queue as Q
+
 #where jugOne is an integer for the amount the first jug can fill,
 #jugTwo is an integer for the amount the second jug can fill, 
 #goal is goal amount to be reached for one just to have
@@ -57,6 +59,61 @@ def twoJugProblemBFS(jugOne, jugTwo, goal):
      
     return;
 
+
+def twoJugProblemAStar(jugOne, jugTwo, goal):
+
+    priorityQueue = Q.PriorityQueue()
+    visitedStates=[]
+    #enqueue initial state 
+    priorityQueue.put((0,(0,0)))
+    visitedStates.append((0,0))
+
+    while priorityQueue.qsize() > 0:
+        #pop the values for the jugOne and jugTwo from the current state
+        jugOneState, jugTwoState = priorityQueue.get(0)[1];
+        print("We are at ", jugOneState, "," ,jugTwoState )
+        #the goal is when only 2 litres is filled between the two jugs, once this is found, exit
+        if jugOneState + jugTwoState == goal:
+            print("You have reached the goal!")    
+            return;
+        states = set()
+
+        # fill jugOne completely    
+        states.add((jugOne, jugTwoState))
+        #fill jug two completely 
+        states.add((jugOneState, jugTwo)) 
+        #empty jug one
+        states.add((0, jugTwoState))
+        #empty jug two
+        states.add((jugOneState, 0))
+        #fill jug one using jug two
+        if jugTwoState < jugOne - jugOneState:
+            states.add((min(jugOne, jugTwoState + jugOneState), 0))
+        else:
+            states.add((min(jugOne, jugTwoState + jugOneState), jugTwoState - (jugOne - jugOneState)))
+        #fill jug two using jug one
+        if jugOneState + jugTwoState < jugTwo:
+            states.add((0,min(jugTwoState + jugOneState, jugTwo)))
+        else:
+            states.add((jugOneState - (jugTwo - jugTwoState),min(jugTwoState + jugOneState, jugTwo)))
+
+        #loop through states
+        for state in states:
+            #if state has already been visited, do not add to queue
+            if state in visitedStates:
+                continue;
+            priorityQueue.put((heuristic(state[0], state[1], goal),state))
+            visitedStates.append(state)
+    return;
+
+
+
+
+def heuristic(jugOne, jugTwo, goal):
+    #g(c) will always be 1. 
+    return abs(jugOne - goal) + abs(jugTwo - goal);
+
 #run main, select the appropriate method to run either BFS solution or heuristic solution 
 if __name__ == "__main__":
     twoJugProblemBFS(4, 3, 2);
+    twoJugProblemAStar(4, 3, 2);
