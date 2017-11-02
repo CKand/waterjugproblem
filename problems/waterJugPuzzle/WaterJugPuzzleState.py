@@ -10,10 +10,16 @@ import timeit
 import numpy as np
 import random
 
+import sys
+sys.path.append('C:\\Users\\Christine\\Documents\\Year4\\CSI4106\\Bonus Assignment\\waterjugproblem-master\\waterjugproblem-master\\')
+
+
+
 from searchdir.heuristicSearch.astar_search import *
 from searchdir.blindSearch.breadthfirst_search import *
 from searchdir.state import *
 from searchdir.util import *
+
 
 class WaterJugPuzzleState(State):
 
@@ -31,6 +37,9 @@ class WaterJugPuzzleState(State):
     # returns the set of legal actions in the current state
     def possibleActions(self):
         # get current states for each jug
+        #where jugOne and jugTwo are the size of the jugs
+        jugOne=4
+        jugTwo=3
         jugOneState = self.jugs[0]
         jugTwoState = self.jugs[1]
 
@@ -38,23 +47,23 @@ class WaterJugPuzzleState(State):
         states = set()
 
         # fill jugOne completely
-        states.add((4, jugTwoState))
+        states.add((jugOne, jugTwoState))
         # fill jug two completely
-        states.add((jugOneState, 3))
+        states.add((jugOneState, jugTwo))
         # empty jug one
         states.add((0, jugTwoState))
         # empty jug two
         states.add((jugOneState, 0))
         # fill jug one using jug two
-        if jugTwoState < 4 - jugOneState:
-            states.add((min(4, jugTwoState + jugOneState), 0))
+        if jugTwoState < jugOne - jugOneState:
+            states.add((min(jugOne, jugTwoState + jugOneState), 0))
         else:
-            states.add((min(4, jugTwoState + jugOneState), jugTwoState - (4 - jugOneState)))
+            states.add((min(jugOne, jugTwoState + jugOneState), jugTwoState - (jugOne - jugOneState)))
         # fill jug two using jug one
-        if jugOneState + jugTwoState < 3:
-            states.add((0, min(jugTwoState + jugOneState, 3)))
+        if jugOneState + jugTwoState < jugTwo:
+            states.add((0, min(jugTwoState + jugOneState, jugTwo)))
         else:
-            states.add((jugOneState - (3 - jugTwoState), min(jugTwoState + jugOneState, 3)))
+            states.add((jugOneState - (jugTwo - jugTwoState), min(jugTwoState + jugOneState, jugTwo)))
 
         # don't think it matters if we sort or not; sorted(states)
         return states
@@ -63,8 +72,8 @@ class WaterJugPuzzleState(State):
     # applies the result of the move on the current state
     def executeAction(self, move):
         # new states from 'move'
-        newJugOneState = move.jugs[0]
-        newJugTwoState = move.jugs[1]
+        newJugOneState = move[0]
+        newJugTwoState = move[1]
 
         # replace the old states to execute action
         self.jugs[0] = newJugOneState
@@ -81,7 +90,7 @@ class WaterJugPuzzleState(State):
     # prints the values of the two water jugs
     def show(self):
         # simple print and return
-        print("We are at ", self.jugs[0], ", ", self.jugs[1])
+        #print("We are at ", self.jugs[0], ", ", self.jugs[1])
 
         return self.jugs
 
@@ -94,21 +103,21 @@ class WaterJugPuzzleState(State):
     # note that you can alternatively call heuristic1() and heuristic2() to test both heuristics with A*
     def heuristic(self):
         # return self.heuristic1()
-        return self.heuristic2()
+        return self.heuristic1()
 
     ## returns the value of your first heuristic for the current state
     # make sure to explain it clearly in your comment
     def heuristic1(self):
         # we have no implementation for this one so far
-        return
+        return abs(self.jugs[0] - 2) + abs(self.jugs[1] - 2)
 
 
     # returns the value of your first heuristic for the current state
     # make sure to explain it clearly in your comment
-    def heuristic2(self, goal):
+    def heuristic2(self, matrix, goal):
         # Distance from goal for both jugs, as described in the report
         # g(c) will always be 1.
-        return abs(self.jugs[0] - goal) + abs(self.jugs[1] - goal)
+        return
 
 
 ####################### SOLVABILITY ###########################
@@ -122,13 +131,11 @@ def issolvable(jugOne, jugTwo, goal):
 
 #######  SEARCH ###########################
 
-# THIS NEEDS TO BE CHANGED STILL
-
-WATER_JUG_DATA = [[0,0,2]]
+# We start with two empty jugs, 
+WATER_JUG_DATA = [[0,0]]
 
 puzzle_choice = WATER_JUG_DATA[0]
 puzzle = WaterJugPuzzleState(puzzle_choice)
-#puzzle, puzzle_choice = randomize(puzzle)
 print('Initial Config')
 puzzle.show()
 
@@ -137,10 +144,10 @@ puzzle.show()
 #stop = timeit.default_timer()
 #printResults('DFS', solution, start, stop, nbvisited)
 
-#start = timeit.default_timer()
-#solution, nbvisited = breadthfirst_search(puzzle)
-#stop = timeit.default_timer()
-#printResults('BFS', solution, start, stop, nbvisited)
+start = timeit.default_timer()
+solution, nbvisited = breadthfirst_search(puzzle)
+stop = timeit.default_timer()
+printResults('BFS', solution, start, stop, nbvisited)
 
 start = timeit.default_timer()
 solution, nbvisited = astar_search(puzzle)
