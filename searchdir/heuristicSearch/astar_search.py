@@ -1,44 +1,52 @@
 from operator import attrgetter
 from searchdir.node import *
 from searchdir.util import PriorityQueue
-
 ## This method must implement A* search
 ## It must return the solution node and the number of visited nodes
 def astar_search(initialState):
-	print('A*------------------------------')
+    print('A* ------------------------------------')
+    #Initiate Priority Queue with A* function and push initial node
+    pqueue = PriorityQueue(fct="A*")
+    initNode = Node(initialState)
+    pqueue.enqueue(initNode)
+    #Initiate explored list
+    explored = []
+    # Initialize visited counter to count number of visited nodes
+    visited = 1
 
-	# create the inital queue/list to look through nodes
-	priorityQueue = PriorityQueue(0)
-	#add the inital state as a node to the priority queue
-	tempNode = Node(initialState)
-	priorityQueue.enqueue(tempNode)
-	closed = []
-	# used for the requirement to return number ofnodes checked
-	visitedNodesList = []
-	# loop through nodes as long as long as queue is not empty
-	while (not priorityQueue.isEmpty()):
-		# we store current nodes after dequeuing from our priority queue
-		currentNode = priorityQueue.dequeue()
-		if (currentNode.state.isGoal()):
-			# return goal node and number of nodes looked at as expected
-			return currentNode, len(visitedNodesList)
-		# add nodes to lists for checking purposes later
-		closed.append(currentNode)
-		visitedNodesList.append(currentNode.state.items)
-		# loop through children and calculate cost using cost and heuristic,
-		# to determine if its the appripriate path
-		#print(currentNode.state.show())
-		for child in currentNode.expand():
-			#depending on the heuristic, determine what should happen to the childnode 
-			cost = currentNode.g + child.h
-			if child in priorityQueue.show() and cost < child.g:
-				priorityQueue.dequeue()
-			if child in closed and cost < child.g:
-				closed.remove(child)
-			if child not in priorityQueue.show() and child not in closed and child.state.items not in visitedNodesList:
-				priorityQueue.enqueue(child)
+    while not pqueue.isEmpty():
+        #Pop the node from Queue with highest priority (smallest cost + heauristic property)
+        currentNode = pqueue.dequeue(None)
+        # While node dequeued explore node
+        if not currentNode.state.isGoal():
+            visited += 1
+            #If node is not Goal, add it to closed
+            explored.append(currentNode)
 
-	if (priorityQueue.isEmpty()):
-		return None, 0
+            #Generate successors from current node
+            for successorNodes in currentNode.expand():
+                #Remove a duplicate of successor node if it's in frontier with a higher cost
+                if pqueue.__contains__(successorNodes):
+                    nodeInOpen = pqueue.dequeue(successorNodes)
+                    #if new path is not less than old path, leave the frontier unchanged
+                    if successorNodes.f >= nodeInOpen.f:
+                        pqueue.enqueue(nodeInOpen)
 
+                #If Successor Node in closed list and successorNode has lower f than node in closed, remove node from closed
+                inClosedNode = inExplored(successorNodes,explored)
+                if (inClosedNode):
+                    if (successorNodes.f < inClosedNode.f ):
+                        explored.remove(inClosedNode)
+
+                if not inExplored(successorNodes,explored) and not pqueue.__contains__(successorNodes):
+                    pqueue.enqueue(successorNodes)
+        else:
+            print("Nodes remaining in Frontier",pqueue.size())
+            return currentNode, visited
+
+def inExplored(nodeUnderStudy,explored):
+    for node in explored:
+        if nodeUnderStudy.state.equals(node.state):
+            return node
+    return False
 

@@ -2,10 +2,12 @@
 ### azouaq@uottawa.ca
 ## Author: Hadi Abdi Ghavidel
 ## habdi.cnlp@gmail.com
+
 import timeit
 
 import numpy as np
 import random
+
 from searchdir.blindSearch.breadthfirst_search import *
 from searchdir.blindSearch.depthfirst_search import *
 from searchdir.heuristicSearch.astar_search import *

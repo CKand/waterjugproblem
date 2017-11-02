@@ -6,119 +6,112 @@
 from operator import attrgetter
 
 #Queue - Implementation of the data structure Queue
+#Queue - Implementation of the data structure Queue
 class Queue:
     # initializes the current data structure
     def __init__(self):
-        # initialize items (our queue) as empty list
-        self.items = []
+        self.nodes = []
 
     # returns the elements of the current data structure
     def show(self):
-        # return its items
-        return self.items
+        return self.nodes
 
     # returns a boolean indicating whether the current data structure is empty or not
     def isEmpty(self):
-        # check if items (our queue) is empty
-        return self.items == []
+        return len(self.nodes) == 0
 
     # add the element item to the current data structure
     def enqueue(self, item):
-        # add to back of queue (left-most), LIFO
-        self.items.insert(0,item)
+        self.nodes.append(item)
 
     # removes an element from the current data structure
     def dequeue(self):
-        # remove right-most item of queue, LIFO
-        return self.items.pop()
+        return self.nodes.pop(0)
 
     # returns the size of the current data structure (the number of elements)
     def size(self):
-        # return length of queue as size
-        return len(self.items)
+        return len(self.nodes)
 
     # returns a boolean value that indicates if the element item is contained in the current data structure
     def __contains__(self, item):
-        # if not empty, return item in items
-        if (len(self.items) == 0):
-            return False
-        return item in self.items
+        return item in self.nodes
 
 
 #Priority Queue Implementation of the data structure PriorityQueue
 class PriorityQueue:
     # initializes the data structure
     def __init__(self, fct):
-        # initialize priority queue using list to hold items
-        self.items = []
-        self.fct = fct
+        self.queue = []
+        self.sortFct=fct
 
     # returns the elements of the current data structure
     def show(self):
-        # return items
-        return self.items
+        return self.queue
 
     # returns a boolean indicating whether the current data structure is empty or not
     def isEmpty(self):
-        # return true/false if items is empty
-        return self.items == []
+        return len(self.queue) == 0
 
     # add the element item to the current data structure
     def enqueue(self, item):
-        # insert to back of priority queue (left-most)
-        self.items.insert(0,item)
+        if self.sortFct == "A*":
+            self.queue.append(item)
+            self.queue.sort(key=lambda x: x.f,reverse=True)
+
 
     # removes an element from the current data structure
-    def dequeue(self):
-        return self.items.pop()
+    def dequeue(self,item):
+        if item is None:
+            return self.queue.pop()
+        else:
+            for i,node in enumerate(self.queue):
+                if node.state.equals(item.state):
+                    return self.queue.pop(i)
+
 
     # returns the size of the current data structure (the number of elements)
     def size(self):
-        # return length of priority queue as size
-        return len(self.items)
+        return len(self.queue)
 
     # returns a boolean value that indicates if the element item is contained in the current data structure
     def __contains__(self, item):
-        # return item in items
-        return item in self.items
+        for nodes in self.queue:
+            if nodes.state.equals(item.state):
+                return True
+        return False
 
 #Stack - Implementation of the data structure Stack
 class Stack:
     # initializes the data structure
     def __init__(self):
-        # set stack to be empty list items
-        self.items = []
+        self.stack = []
 
     # returns the elements of the current data structure
     def show(self):
-        # return stack
-        return self.items
+        return self.stack
 
     # returns a boolean indicating whether the current data structure is empty or not
     def isEmpty(self):
-        # check if stack is empty, boolean true or false
-        return self.items == []
+        return len(self.stack) == 0
 
     # add the element item to the current data structure
     def push(self, item):
-        # push to front of stack, FIFO
-        self.items.append(item)
+        self.stack.append(item)
 
     # removes an element from the current data structure
     def pop(self):
-        # pop from front of stack, FIFO
-        return self.items.pop()
+        return self.stack.pop()
 
     # returns the size of the current data structure (the number of elements)
     def size(self):
-        # return length of list as stack size
-        return len(self.items)
+        return len(self.stack)
 
     # returns a boolean value that indicates if the element item is contained in the current data structure
     def __contains__(self, item):
-        # return item in items
-        return item in self.items
-
+        for nodes in self.stack:
+            if nodes.state.equals(item.state):
+                return True
+        return False
 
 #Prints results for search alorithms
 def printResults(alg, solution, start, stop, nbvisited):
