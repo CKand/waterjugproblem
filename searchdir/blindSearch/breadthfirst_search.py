@@ -1,3 +1,6 @@
+#import sys
+#sys.path.append('C:\\Users\\Christine\\Documents\\Year4\\CSI4106\\Bonus Assignment\\waterjugproblem-master\\waterjugproblem-master\\')
+
 from searchdir.node import *
 from searchdir.util import *
 
@@ -24,16 +27,13 @@ def breadthfirst_search(initialState):
 		if (currentNode.state.isGoal()):
 			return currentNode, 1
         # we add it to our explored nodes as we have now visited it
-		explored.append(currentNode)
 		#look through the children nodes of the current node
 		for childNode in currentNode.expand():
 
 			#if childnode has not already been seen, check if it matches the goal nodes
-			if (childNode not in frontier.show() and childNode.state.items not in explored):
+			if (childNode not in frontier and childNode.state.show() not in explored):
 				# add action to explored
-				explored.append(childNode.state.items)
-                # uncomment the below  line if you would like to see all the states 
-				#print(childNode.state.show)
+				explored.append(childNode.state.show())
 				#if childnode is the goal node, exit and algorithm is done
 				if childNode.state.isGoal():
 					#returns the goal node and the number of visited nodes as required
@@ -44,3 +44,5 @@ def breadthfirst_search(initialState):
 	# if frontier is empty, then the search has failed, we return appropriately
 	if (frontier.isEmpty()):
 		return [],len(explored)
+
+
