@@ -10,12 +10,10 @@ import timeit
 import numpy as np
 import random
 
-
 from searchdir.heuristicSearch.astar_search import *
-from searchdir.heuristicSearch.idastar_search import *
+from searchdir.blindSearch.breadthfirst_search import *
 from searchdir.state import *
 from searchdir.util import *
-
 
 class WaterJugPuzzleState(State):
 
@@ -40,23 +38,23 @@ class WaterJugPuzzleState(State):
         states = set()
 
         # fill jugOne completely
-        states.add((jugOne, jugTwoState))
+        states.add((4, jugTwoState))
         # fill jug two completely
-        states.add((jugOneState, jugTwo))
+        states.add((jugOneState, 3))
         # empty jug one
         states.add((0, jugTwoState))
         # empty jug two
         states.add((jugOneState, 0))
         # fill jug one using jug two
-        if jugTwoState < jugOne - jugOneState:
-            states.add((min(jugOne, jugTwoState + jugOneState), 0))
+        if jugTwoState < 4 - jugOneState:
+            states.add((min(4, jugTwoState + jugOneState), 0))
         else:
-            states.add((min(jugOne, jugTwoState + jugOneState), jugTwoState - (jugOne - jugOneState)))
+            states.add((min(4, jugTwoState + jugOneState), jugTwoState - (4 - jugOneState)))
         # fill jug two using jug one
-        if jugOneState + jugTwoState < jugTwo:
-            states.add((0, min(jugTwoState + jugOneState, jugTwo)))
+        if jugOneState + jugTwoState < 3:
+            states.add((0, min(jugTwoState + jugOneState, 3)))
         else:
-            states.add((jugOneState - (jugTwo - jugTwoState), min(jugTwoState + jugOneState, jugTwo)))
+            states.add((jugOneState - (3 - jugTwoState), min(jugTwoState + jugOneState, 3)))
 
         # don't think it matters if we sort or not; sorted(states)
         return states
@@ -107,10 +105,10 @@ class WaterJugPuzzleState(State):
 
     # returns the value of your first heuristic for the current state
     # make sure to explain it clearly in your comment
-    def heuristic2(self, matrix, goal):
+    def heuristic2(self, goal):
         # Distance from goal for both jugs, as described in the report
         # g(c) will always be 1.
-        return abs(jugOne - goal) + abs(jugTwo - goal)
+        return abs(self.jugs[0] - goal) + abs(self.jugs[1] - goal)
 
 
 ####################### SOLVABILITY ###########################
@@ -126,7 +124,7 @@ def issolvable(jugOne, jugTwo, goal):
 
 # THIS NEEDS TO BE CHANGED STILL
 
-WATER_JUG_DATA = [[4,3,2]]
+WATER_JUG_DATA = [[0,0,2]]
 
 puzzle_choice = WATER_JUG_DATA[0]
 puzzle = WaterJugPuzzleState(puzzle_choice)
@@ -139,12 +137,12 @@ puzzle.show()
 #stop = timeit.default_timer()
 #printResults('DFS', solution, start, stop, nbvisited)
 
-start = timeit.default_timer()
-solution, nbvisited = breadthfirst_search(puzzle)
-stop = timeit.default_timer()
-printResults('BFS', solution, start, stop, nbvisited)
+#start = timeit.default_timer()
+#solution, nbvisited = breadthfirst_search(puzzle)
+#stop = timeit.default_timer()
+#printResults('BFS', solution, start, stop, nbvisited)
 
 start = timeit.default_timer()
-solution, nbvisited = idastar_search(puzzle)
+solution, nbvisited = astar_search(puzzle)
 stop = timeit.default_timer()
-printResults('IDA*', solution, start, stop, nbvisited)
+printResults('A*', solution, start, stop, nbvisited)
