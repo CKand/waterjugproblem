@@ -10,16 +10,11 @@ import timeit
 import numpy as np
 import random
 
-#import sys
-#sys.path.append('C:\\Users\\Christine\\Documents\\Year4\\CSI4106\\Bonus Assignment\\waterjugproblem-master\\waterjugproblem-master\\')
-
-
-
+from searchdir.blindSearch.depthfirst_search import *
 from searchdir.heuristicSearch.astar_search import *
 from searchdir.blindSearch.breadthfirst_search import *
 from searchdir.state import *
 from searchdir.util import *
-
 
 class WaterJugPuzzleState(State):
 
@@ -131,7 +126,7 @@ def issolvable(jugOne, jugTwo, goal):
 
 #######  SEARCH ###########################
 
-# We start with two empty jugs, 
+# We start with two empty jugs,
 WATER_JUG_DATA = [[0,0]]
 
 puzzle_choice = WATER_JUG_DATA[0]
@@ -139,10 +134,10 @@ puzzle = WaterJugPuzzleState(puzzle_choice)
 print('Initial Config')
 puzzle.show()
 
-#start = timeit.default_timer()
-#solution, nbvisited = depthfirst_search(puzzle)
-#stop = timeit.default_timer()
-#printResults('DFS', solution, start, stop, nbvisited)
+start = timeit.default_timer()
+solution, nbvisited = depthfirst_search(puzzle)
+stop = timeit.default_timer()
+printResults('DFS', solution, start, stop, nbvisited)
 
 start = timeit.default_timer()
 solution, nbvisited = breadthfirst_search(puzzle)

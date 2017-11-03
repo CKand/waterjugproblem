@@ -1,6 +1,3 @@
-#import sys
-#sys.path.append('C:\\Users\\Christine\\Documents\\Year4\\CSI4106\\Bonus Assignment\\waterjugproblem-master\\waterjugproblem-master\\')
-
 from searchdir.node import *
 from searchdir.util import *
 
@@ -23,10 +20,13 @@ def breadthfirst_search(initialState):
         # we store current nodes after dequeuing from our FIFO queue
 		currentNode = frontier.dequeue()
 
+        # uncomment if you want to see the algorithm working
+		#print(currentNode.state.show())
+
 		# if the initial node is the goal node, then we are done and we return it
 		if (currentNode.state.isGoal()):
 			return currentNode, 1
-        # we add it to our explored nodes as we have now visited it
+
 		#look through the children nodes of the current node
 		for childNode in currentNode.expand():
 
@@ -44,5 +44,4 @@ def breadthfirst_search(initialState):
 	# if frontier is empty, then the search has failed, we return appropriately
 	if (frontier.isEmpty()):
 		return [],len(explored)
-
 
